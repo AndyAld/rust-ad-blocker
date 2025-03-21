@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Rust AdBlocker",
+  "version": "1.0.0",
+  "description": "High-performance ad blocker powered by Rust and WebAssembly",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "*://*/*"
+  ],
+  "background": {
+    "page": "background.html"
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

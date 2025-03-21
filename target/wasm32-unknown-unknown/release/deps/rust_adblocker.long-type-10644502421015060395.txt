@@ -1,0 +1,1 @@
+hashbrown::HashMap<std::string::String, bool>: Serialize
