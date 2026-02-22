@@ -1,78 +1,367 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <title>Rust AdBlocker Options</title>
+  <title>Rust AdBlocker — Settings</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       max-width: 800px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 24px;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      line-height: 1.5;
     }
+
     h1 {
-      color: #333;
+      font-size: 24px;
+      color: #e94560;
+      margin-bottom: 4px;
     }
+
+    .page-subtitle {
+      color: #6b7b8d;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #c0c8d4;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #1e2a4a;
+    }
+
     .section {
-      margin-bottom: 20px;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      background: #1a1a2e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid #1e2a4a;
     }
-    textarea {
-      width: 100%;
-      height: 150px;
-      margin-top: 10px;
-      font-family: monospace;
+
+    /* Stats row */
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
     }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
+
+    .stat-box {
+      flex: 1;
+      background: #16213e;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-box .val {
+      font-size: 28px;
+      font-weight: 700;
+      color: #e94560;
+    }
+
+    .stat-box .lbl {
+      font-size: 11px;
+      color: #6b7b8d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Filter list items */
+    .filter-list-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #1e2a4a;
+    }
+
+    .filter-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .filter-list-item .info {
+      flex: 1;
+    }
+
+    .filter-list-item .title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .filter-list-item .desc {
+      font-size: 11px;
+      color: #6b7b8d;
+    }
+
+    .filter-list-item .meta {
+      font-size: 10px;
+      color: #4a5568;
+      margin-top: 2px;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle .slider {
+      position: absolute;
+      inset: 0;
+      background: #2a2a4a;
+      border-radius: 24px;
       cursor: pointer;
-      margin-top: 10px;
+      transition: 0.3s;
     }
+
+    .toggle .slider:before {
+      content: '';
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: #666;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle input:checked+.slider {
+      background: #e94560;
+    }
+
+    .toggle input:checked+.slider:before {
+      transform: translateX(18px);
+      background: white;
+    }
+
+    /* Privacy toggle rows */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #1e2a4a;
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .setting-row .info {
+      flex: 1;
+    }
+
+    .setting-row .title {
+      font-size: 14px;
+    }
+
+    .setting-row .desc {
+      font-size: 11px;
+      color: #6b7b8d;
+    }
+
+    /* Buttons */
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      font-weight: 500;
+    }
+
     button:hover {
-      background-color: #45a049;
+      opacity: 0.85;
     }
-    .status {
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 4px;
+
+    .btn-primary {
+      background: #e94560;
+      color: white;
     }
-    .success {
-      background-color: #d4edda;
-      color: #155724;
+
+    .btn-secondary {
+      background: #16213e;
+      color: #8899aa;
+      border: 1px solid #2a3a5e;
     }
-    .error {
-      background-color: #f8d7da;
-      color: #721c24;
+
+    .btn-danger {
+      background: #451a1a;
+      color: #f87171;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* Custom list input */
+    .add-list-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .add-list-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #2a3a5e;
+      border-radius: 6px;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      font-size: 13px;
+    }
+
+    .add-list-row input::placeholder {
+      color: #4a5568;
+    }
+
+    /* Status toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: #0d4228;
+      color: #4ade80;
+    }
+
+    .toast.error {
+      background: #451a1a;
+      color: #f87171;
     }
   </style>
 </head>
+
 <body>
-  <h1>Rust AdBlocker Options</h1>
-  
-  <div class="section">
-    <h2>Custom Filter Rules</h2>
-    <p>Enter your custom filter rules in JSON format:</p>
-    <textarea id="rulesTextarea"></textarea>
-    <div>
-      <button id="saveButton">Save Rules</button>
-      <button id="resetButton">Reset to Default</button>
+  <h1>🛡️ Rust AdBlocker Settings</h1>
+  <p class="page-subtitle">Manage filter lists, privacy settings, and statistics</p>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="val" id="blockedToday">0</div>
+      <div class="lbl">Blocked Today</div>
     </div>
-    <div id="status" class="status" style="display: none;"></div>
+    <div class="stat-box">
+      <div class="val" id="totalBlocked">0</div>
+      <div class="lbl">Total Blocked</div>
+    </div>
+    <div class="stat-box">
+      <div class="val" id="networkFilters">0</div>
+      <div class="lbl">Network Filters</div>
+    </div>
+    <div class="stat-box">
+      <div class="val" id="cosmeticFilters">0</div>
+      <div class="lbl">Cosmetic Filters</div>
+    </div>
   </div>
-  
+
+  <!-- Filter Lists -->
   <div class="section">
-    <h2>Statistics</h2>
-    <p>Ads blocked today: <span id="blockedToday">0</span></p>
-    <p>Total ads blocked: <span id="totalBlocked">0</span></p>
-    <button id="clearStatsButton">Clear Statistics</button>
+    <h2>Filter Lists</h2>
+    <div id="filterListContainer">Loading...</div>
+    <div class="add-list-row">
+      <input type="text" id="customListUrl" placeholder="Add custom filter list URL...">
+      <button class="btn-primary" id="addCustomListBtn">Add</button>
+    </div>
+    <div class="btn-group">
+      <button class="btn-secondary" id="updateAllBtn">⟳ Update All Lists</button>
+      <button class="btn-danger" id="clearStatsBtn">Clear Statistics</button>
+    </div>
   </div>
-  
+
+  <!-- Privacy Settings -->
+  <div class="section">
+    <h2>Privacy Protection</h2>
+    <div id="privacySettings">
+      <div class="setting-row">
+        <div class="info">
+          <div class="title">URL Parameter Stripping</div>
+          <div class="desc">Remove tracking parameters (fbclid, utm_source, gclid, etc.) from URLs</div>
+        </div>
+        <label class="toggle"><input type="checkbox" data-setting="stripTrackingParams" checked><span
+            class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="info">
+          <div class="title">Referrer Scrubbing</div>
+          <div class="desc">Strip referrer header for third-party requests to prevent cross-site tracking</div>
+        </div>
+        <label class="toggle"><input type="checkbox" data-setting="stripReferrer" checked><span
+            class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="info">
+          <div class="title">User-Agent Normalization</div>
+          <div class="desc">Spoof a common user-agent string to blend in with other browsers</div>
+        </div>
+        <label class="toggle"><input type="checkbox" data-setting="normalizeUserAgent" checked><span
+            class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="info">
+          <div class="title">Fingerprint Protection</div>
+          <div class="desc">Add noise to Canvas, WebGL, and AudioContext APIs to prevent fingerprinting</div>
+        </div>
+        <label class="toggle"><input type="checkbox" data-setting="fingerprintProtection" checked><span
+            class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="info">
+          <div class="title">WebRTC Leak Protection</div>
+          <div class="desc">Restrict WebRTC to relay mode to prevent real IP address leakage</div>
+        </div>
+        <label class="toggle"><input type="checkbox" data-setting="webrtcProtection" checked><span
+            class="slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="info">
+          <div class="title">CNAME Cloaking Detection</div>
+          <div class="desc">Block trackers that hide behind first-party CNAME records</div>
+        </div>
+        <label class="toggle"><input type="checkbox" data-setting="cnameDetection" checked><span
+            class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script src="options.js"></script>
 </body>
+
 </html>

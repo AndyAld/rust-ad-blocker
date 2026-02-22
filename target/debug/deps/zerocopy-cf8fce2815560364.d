@@ -1,0 +1,15 @@
+/mnt/c/Projects/rust-ad-blocker/target/debug/deps/zerocopy-cf8fce2815560364.d: /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/lib.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macros.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macro_util.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/post_monomorphization_compile_fail_tests.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/util.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/third_party/rust/layout.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/wrappers.rs
+
+/mnt/c/Projects/rust-ad-blocker/target/debug/deps/libzerocopy-cf8fce2815560364.rlib: /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/lib.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macros.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macro_util.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/post_monomorphization_compile_fail_tests.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/util.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/third_party/rust/layout.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/wrappers.rs
+
+/mnt/c/Projects/rust-ad-blocker/target/debug/deps/libzerocopy-cf8fce2815560364.rmeta: /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/lib.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macros.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macro_util.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/post_monomorphization_compile_fail_tests.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/util.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/third_party/rust/layout.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/wrappers.rs
+
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/lib.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macros.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/macro_util.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/post_monomorphization_compile_fail_tests.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/util.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/third_party/rust/layout.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zerocopy-0.7.35/src/wrappers.rs:
+
+# env-dep:CARGO_PKG_VERSION=0.7.35

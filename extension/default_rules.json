@@ -1,0 +1,19 @@
+{
+    "filter_rules": [
+        "googleads.g.doubleclick.net",
+        "pagead2.googlesyndication.com",
+        "tpc.googlesyndication.com",
+        "securepubads.g.doubleclick.net"
+    ],
+    "regex_rules": [
+        ".*\\.doubleclick\\.net/.*",
+        ".*\\.googlesyndication\\.com/.*",
+        ".*\\.google-analytics\\.com/.*",
+        ".*\\.adnxs\\.com/.*",
+        ".*\\.facebook\\.com/tr/.*"
+    ],
+    "domain_rules": {
+        "ads.example.com": true,
+        "analytics.example.com": true
+    }
+}

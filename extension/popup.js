@@ -1,60 +1,79 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const statusDiv = document.getElementById('status');
   const toggleButton = document.getElementById('toggleButton');
   const optionsButton = document.getElementById('optionsButton');
   const blockedCountSpan = document.getElementById('blockedCount');
   const totalBlockedSpan = document.getElementById('totalBlocked');
-  
-  // Get stats from background page
-  chrome.runtime.sendMessage({ action: "getStats" }, function(response) {
+  const filtersInfo = document.getElementById('filtersInfo');
+
+  // Get stats from background
+  chrome.runtime.sendMessage({ action: 'getStats' }, function (response) {
+    if (chrome.runtime.lastError) {
+      console.warn('Could not reach background:', chrome.runtime.lastError.message);
+      loadFromStorage();
+      return;
+    }
     if (response) {
       updateUI(response.enabled, response.blockedToday, response.totalBlocked);
+      if (response.networkFilters !== undefined) {
+        filtersInfo.textContent =
+          `${response.networkFilters.toLocaleString()} network filters · ${response.cosmeticFilters.toLocaleString()} cosmetic filters`;
+      }
     } else {
-      // Fallback to storage if background page is not ready
-      chrome.storage.local.get(['enabled', 'blockedToday', 'totalBlocked'], function(result) {
-        const enabled = result.enabled === undefined ? true : result.enabled;
-        const blockedToday = result.blockedToday || 0;
-        const totalBlocked = result.totalBlocked || 0;
-        
-        updateUI(enabled, blockedToday, totalBlocked);
-      });
+      loadFromStorage();
     }
   });
-  
+
+  function loadFromStorage() {
+    chrome.storage.local.get(['enabled', 'blockedToday', 'totalBlocked'], function (result) {
+      updateUI(
+        result.enabled === undefined ? true : result.enabled,
+        result.blockedToday || 0,
+        result.totalBlocked || 0
+      );
+    });
+  }
+
   function updateUI(enabled, blockedToday, totalBlocked) {
     if (enabled) {
-      statusDiv.className = 'status enabled';
-      statusDiv.textContent = 'Ad blocking is enabled';
+      statusDiv.className = 'status-bar enabled';
+      statusDiv.textContent = 'Protection Active';
       toggleButton.textContent = 'Disable';
       toggleButton.className = '';
     } else {
-      statusDiv.className = 'status disabled';
-      statusDiv.textContent = 'Ad blocking is disabled';
+      statusDiv.className = 'status-bar disabled';
+      statusDiv.textContent = 'Protection Disabled';
       toggleButton.textContent = 'Enable';
-      toggleButton.className = 'disabled';
+      toggleButton.className = 'off';
     }
-    
-    blockedCountSpan.textContent = blockedToday;
-    totalBlockedSpan.textContent = totalBlocked;
+
+    blockedCountSpan.textContent = blockedToday.toLocaleString();
+    totalBlockedSpan.textContent = totalBlocked.toLocaleString();
   }
-  
-  toggleButton.addEventListener('click', function() {
-    chrome.storage.local.get(['enabled'], function(result) {
-      const enabled = result.enabled === undefined ? true : result.enabled;
-      const newEnabled = !enabled;
-      
-      chrome.storage.local.set({ 'enabled': newEnabled }, function() {
-        chrome.storage.local.get(['blockedToday', 'totalBlocked'], function(result) {
+
+  toggleButton.addEventListener('click', function () {
+    chrome.storage.local.get(['enabled'], function (result) {
+      const current = result.enabled === undefined ? true : result.enabled;
+      const newEnabled = !current;
+
+      chrome.storage.local.set({ enabled: newEnabled }, function () {
+        chrome.storage.local.get(['blockedToday', 'totalBlocked'], function (result) {
           updateUI(newEnabled, result.blockedToday || 0, result.totalBlocked || 0);
         });
       });
-      
-      // Send message to background script
-      chrome.runtime.sendMessage({ action: 'toggleEnabled', enabled: newEnabled });
+
+      chrome.runtime.sendMessage(
+        { action: 'toggleEnabled', enabled: newEnabled },
+        function (response) {
+          if (chrome.runtime.lastError) {
+            console.warn('Could not reach background:', chrome.runtime.lastError.message);
+          }
+        }
+      );
     });
   });
-  
-  optionsButton.addEventListener('click', function() {
+
+  optionsButton.addEventListener('click', function () {
     if (chrome.runtime.openOptionsPage) {
       chrome.runtime.openOptionsPage();
     } else {

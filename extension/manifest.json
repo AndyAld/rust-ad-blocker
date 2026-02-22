@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Rust AdBlocker",
-  "version": "1.0.0",
-  "description": "High-performance ad blocker powered by Rust and WebAssembly",
+  "version": "2.0.0",
+  "description": "High-performance ad blocker and privacy protection powered by Rust and WebAssembly",
   "permissions": [
     "webRequest",
     "webRequestBlocking",
@@ -15,5 +15,43 @@
   "browser_action": {
     "default_popup": "popup.html"
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content/privacy.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content/cosmetic.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content/script_analyzer.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "content_security_policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'",
+  "web_accessible_resources": [
+    "data/*.json",
+    "default_rules.json",
+    "filter_lists.js"
+  ]
 }
