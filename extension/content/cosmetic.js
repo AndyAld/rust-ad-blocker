@@ -52,20 +52,31 @@
     }
 
     // Watch for dynamically inserted ad elements
+    let selectorsLoaded = false;
+    let lastCheck = 0;
+    const CHECK_COOLDOWN = 2000; // ms between re-checks
+
     const observer = new MutationObserver(function (mutations) {
-        // Re-check periodically rather than on every mutation
-        if (observer._pendingCheck) return;
+        // Once selectors are loaded and applied, skip re-requests
+        // (filter lists don't change mid-page)
+        if (selectorsLoaded) return;
+
+        // Debounce: skip if a check is pending or cooldown hasn't elapsed
+        const now = Date.now();
+        if (observer._pendingCheck || now - lastCheck < CHECK_COOLDOWN) return;
         observer._pendingCheck = true;
 
-        requestAnimationFrame(function () {
+        const scheduleCheck = window.requestIdleCallback || requestAnimationFrame;
+        scheduleCheck(function () {
             observer._pendingCheck = false;
-            // Re-request selectors in case new rules were loaded
+            lastCheck = Date.now();
             chrome.runtime.sendMessage(
                 { action: 'getCosmeticSelectors', domain: domain },
                 function (response) {
                     if (chrome.runtime.lastError) return;
                     if (response && response.selectors) {
                         injectHidingRules(response.selectors);
+                        selectorsLoaded = true; // Stop future re-requests
                     }
                 }
             );

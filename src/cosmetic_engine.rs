@@ -1,5 +1,8 @@
 use crate::filter_parser::CosmeticFilter;
 use hashbrown::HashMap;
+use lru::LruCache;
+use std::cell::RefCell;
+use std::num::NonZeroUsize;
 
 // ── Cosmetic filter engine ──────────────────────────────────────────────────
 
@@ -12,6 +15,8 @@ pub struct CosmeticEngine {
     domain_unhide_filters: HashMap<String, Vec<CosmeticFilter>>,
     /// Generic unhide filters
     generic_unhide_filters: Vec<CosmeticFilter>,
+    /// LRU cache for computed selectors per domain
+    selector_cache: RefCell<LruCache<String, Vec<String>>>,
 }
 
 impl CosmeticEngine {
@@ -21,6 +26,7 @@ impl CosmeticEngine {
             generic_filters: Vec::new(),
             domain_unhide_filters: HashMap::new(),
             generic_unhide_filters: Vec::new(),
+            selector_cache: RefCell::new(LruCache::new(NonZeroUsize::new(256).unwrap())),
         }
     }
 
@@ -61,11 +67,17 @@ impl CosmeticEngine {
         self.generic_filters.clear();
         self.domain_unhide_filters.clear();
         self.generic_unhide_filters.clear();
+        self.selector_cache.borrow_mut().clear();
     }
 
     /// Get all CSS selectors that should be hidden on a given domain.
-    /// Returns a deduplicated list of selectors.
+    /// Returns a deduplicated list of selectors. Results are cached.
     pub fn get_selectors_for_domain(&self, domain: &str) -> Vec<String> {
+        // Check the LRU cache first
+        if let Some(cached) = self.selector_cache.borrow_mut().get(domain) {
+            return cached.clone();
+        }
+
         let mut selectors = Vec::new();
         let mut unhidden: hashbrown::HashSet<String> = hashbrown::HashSet::new();
 
@@ -113,6 +125,9 @@ impl CosmeticEngine {
         // Deduplicate
         let mut seen = hashbrown::HashSet::new();
         selectors.retain(|s| seen.insert(s.clone()));
+
+        // Cache the result
+        self.selector_cache.borrow_mut().put(domain.to_string(), selectors.clone());
 
         selectors
     }

@@ -5,6 +5,21 @@
 (function () {
     'use strict';
 
+    // ── Skip protections on auth/login domains ─────────────────────────
+    // Google, Microsoft, etc. use fingerprinting for security (bot detection).
+    // Our spoofing triggers "insecure browser" blocks on sign-in pages.
+    const AUTH_DOMAINS = [
+        'accounts.google.com',
+        'accounts.youtube.com',
+        'login.microsoftonline.com',
+        'login.live.com',
+        'appleid.apple.com',
+    ];
+    const hostname = window.location.hostname;
+    if (AUTH_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d))) {
+        return; // Don't inject protections on auth pages
+    }
+
     // ── Inject into the page's main world ────────────────────────────────
     // Content scripts run in an isolated world, so we need to inject code
     // into the actual page context to override its APIs.

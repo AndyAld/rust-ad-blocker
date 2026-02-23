@@ -241,25 +241,14 @@ impl NetworkFilterEngine {
         }
         } // end bloom-hit block
 
-        // 3. Check generic (tokenless) blocking filters
-        for filter in &self.generic_block_filters {
-            if matches_filter(filter, &url_lower, source_domain, request_type, is_third_party) {
-                // Check for exceptions
-                for exc_filter in &self.generic_exception_filters {
-                    if matches_filter(
-                        exc_filter,
-                        &url_lower,
-                        source_domain,
-                        request_type,
-                        is_third_party,
-                    ) {
-                        return MatchResult::Allow;
-                    }
-                }
-
-                return MatchResult::Block;
-            }
-        }
+        // 3. Skip generic (tokenless) blocking filters.
+        //    These filters have no identifying tokens and are checked against
+        //    every single request, causing excessive false positives.
+        //    Hostname-anchored and token-indexed filters provide sufficient
+        //    coverage — generic filters trade too much precision for coverage.
+        //
+        //    NOTE: Generic EXCEPTION filters are still checked above when a
+        //    hostname or token-indexed filter matches (lines 199-237).
 
         MatchResult::NoMatch
     }
@@ -652,7 +641,7 @@ fn extract_url_tokens(url: &str) -> Vec<String> {
         }
     }
 
-    if current.len() >= 5 {
+    if current.len() >= 3 {
         tokens.push(current);
     }
 

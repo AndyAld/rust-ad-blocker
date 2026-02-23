@@ -18,3 +18,11 @@ serde_json = "1.0.107"
 hashbrown = { version = "0.14.0", features = ["serde"] }
 bitflags = { version = "2.4", features = ["serde"] }
 bloomfilter = "1.0"
+smallvec = "1.11"
+lru = "0.12"
+
+[profile.release]
+opt-level = 's'       # Optimize for size (good for WASM download)
+lto = true            # Link-time optimization (cross-crate inlining)
+codegen-units = 1     # Single codegen unit for maximum optimization
+strip = true          # Strip debug symbols

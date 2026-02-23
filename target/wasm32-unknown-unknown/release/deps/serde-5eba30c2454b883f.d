@@ -1,0 +1,14 @@
+/mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/deps/serde-5eba30c2454b883f.d: /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/build/serde-cd414a3a1acd90be/out/private.rs
+
+/mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/deps/libserde-5eba30c2454b883f.rlib: /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/build/serde-cd414a3a1acd90be/out/private.rs
+
+/mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/deps/libserde-5eba30c2454b883f.rmeta: /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/build/serde-cd414a3a1acd90be/out/private.rs
+
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/andy/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/build/serde-cd414a3a1acd90be/out/private.rs:
+
+# env-dep:OUT_DIR=/mnt/c/Projects/rust-ad-blocker/target/wasm32-unknown-unknown/release/build/serde-cd414a3a1acd90be/out

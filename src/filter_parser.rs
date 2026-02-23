@@ -1,5 +1,6 @@
 use hashbrown::HashMap;
 use serde::{Deserialize, Serialize};
+use smallvec::SmallVec;
 
 // ── Request type bitmask ────────────────────────────────────────────────────
 
@@ -80,11 +81,11 @@ pub struct NetworkFilter {
     /// Third-party constraint
     pub third_party: ThirdParty,
     /// Domain restrictions: (domain, include). include=true means "only on this domain".
-    pub domains: Vec<(String, bool)>,
+    pub domains: SmallVec<[(String, bool); 2]>,
     /// Compiled regex (lazily populated by the matcher)
     pub compiled_regex: Option<regex::Regex>,
     /// Tokens extracted from the pattern for fast lookup
-    pub tokens: Vec<String>,
+    pub tokens: SmallVec<[String; 4]>,
 }
 
 impl NetworkFilter {
@@ -146,7 +147,7 @@ pub struct CosmeticFilter {
     pub is_unhide: bool,
     /// Domains this applies to. Empty = all domains ("generic").
     /// Each entry is (domain, include). include=true means "only on this domain".
-    pub domains: Vec<(String, bool)>,
+    pub domains: SmallVec<[(String, bool); 2]>,
 }
 
 impl CosmeticFilter {
@@ -348,9 +349,9 @@ fn find_cosmetic_separator(line: &str) -> Option<usize> {
 }
 
 /// Parse a comma-separated domain list into (domain, include) pairs
-fn parse_domain_list(s: &str) -> Vec<(String, bool)> {
+fn parse_domain_list(s: &str) -> SmallVec<[(String, bool); 2]> {
     if s.is_empty() {
-        return Vec::new();
+        return SmallVec::new();
     }
 
     s.split(',')
@@ -461,11 +462,11 @@ fn parse_pattern(pattern: &str) -> (String, bool, bool, bool, bool) {
 }
 
 /// Parse the options string ($option1,option2,...) into structured data
-fn parse_options(options: &str) -> (RequestType, ThirdParty, bool, Vec<(String, bool)>) {
+fn parse_options(options: &str) -> (RequestType, ThirdParty, bool, SmallVec<[(String, bool); 2]>) {
     let mut request_types = RequestType::ALL;
     let mut third_party = ThirdParty::Either;
     let mut match_case = false;
-    let mut domains = Vec::new();
+    let mut domains = SmallVec::new();
     let mut has_type_opt = false;
 
     if options.is_empty() {
@@ -548,8 +549,8 @@ fn parse_options(options: &str) -> (RequestType, ThirdParty, bool, Vec<(String, 
 
 /// Extract tokens from a pattern for hash-based indexing.
 /// Tokens are alphanumeric strings of 3+ characters.
-fn extract_tokens(pattern: &str) -> Vec<String> {
-    let mut tokens = Vec::new();
+fn extract_tokens(pattern: &str) -> SmallVec<[String; 4]> {
+    let mut tokens = SmallVec::new();
     let mut current = String::new();
 
     for c in pattern.chars() {
@@ -563,7 +564,7 @@ fn extract_tokens(pattern: &str) -> Vec<String> {
         }
     }
 
-    if current.len() >= 5 {
+    if current.len() >= 3 {
         tokens.push(current);
     }
 

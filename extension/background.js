@@ -27,7 +27,7 @@ let filterListManager = null;
 
 // ── A common, generic User-Agent string ──────────────────────────────
 const NORMALIZED_USER_AGENT =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 
 // ── Known GENERIC content CDNs that should never be blocked ──────────
 // These are shared infrastructure CDNs, not site-specific.
@@ -52,6 +52,13 @@ const GENERIC_CDNS = new Set([
   'ggpht.com',              // Google profile photos
   'bootstrapcdn.com',       // Bootstrap CDN
   'fontawesome.com',        // Font Awesome
+  'discourse-cdn.com',      // Discourse hosted forums
+  'cloudflareinsights.com', // Cloudflare analytics
+  'azureedge.net',          // Azure CDN
+  'azurefd.net',            // Azure Front Door
+  'b-cdn.net',              // BunnyCDN
+  'stackpathdns.com',       // StackPath CDN
+  'kxcdn.com',              // KeyCDN
 ]);
 
 // ── Detect related domains (site-specific CDNs) ─────────────────────
