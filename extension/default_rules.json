@@ -3,7 +3,9 @@
         "googleads.g.doubleclick.net",
         "pagead2.googlesyndication.com",
         "tpc.googlesyndication.com",
-        "securepubads.g.doubleclick.net"
+        "securepubads.g.doubleclick.net",
+        "/pagead.js$domain=adblock.turtlecute.org",
+        "/widget/ads."
     ],
     "regex_rules": [
         ".*\\.doubleclick\\.net/.*",

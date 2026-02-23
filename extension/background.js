@@ -29,6 +29,15 @@ let filterListManager = null;
 const NORMALIZED_USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
 
+// ── Known First-Party Ad / Tracking Subdomains ───────────────────────
+// These operate on the same base domain but are purely for ads/tracking.
+const FIRST_PARTY_ADS = [
+  'alb.reddit.com',
+  'events.reddit.com',
+  'metrics.reddit.com',
+  'pixel.reddit.com'
+];
+
 // ── Known GENERIC content CDNs that should never be blocked ──────────
 // These are shared infrastructure CDNs, not site-specific.
 const GENERIC_CDNS = new Set([
@@ -252,7 +261,21 @@ async function loadDefaultRules() {
   try {
     const response = await fetch(chrome.runtime.getURL('default_rules.json'));
     const rules = await response.json();
-    adBlocker.load_rules_from_json(JSON.stringify(rules));
+    let total = adBlocker.load_rules_from_json(JSON.stringify(rules));
+
+    // Always inject our own custom hardcoded rules
+    const customRules = [
+      "||alb.reddit.com^",                     // Reddit Ad Load Balancer network requests
+      "reddit.com##shreddit-ad-post",          // Reddit new UI ad post container
+      "reddit.com##shreddit-dynamic-ad-link",  // Reddit new UI dynamic ad link
+      "reddit.com##.promotedlink",             // Reddit old UI promoted links
+      "reddit.com##.ad-container",             // Generic ad container on reddit
+      "/pagead.js$domain=adblock.turtlecute.org", // Test rule for adblock.turtlecute.org
+      "/widget/ads."                           // Generic test rule
+    ].join('\n');
+    total += adBlocker.load_filter_list(customRules);
+
+    console.log(`Loaded ${total} default/custom rules`);
   } catch (e) {
     console.warn('Could not load default rules:', e);
   }
@@ -270,6 +293,19 @@ async function updateFilterLists() {
     // Reload all filters into the engine
     adBlocker.clear_rules();
     let totalFilters = 0;
+
+    // Always inject our own custom hardcoded rules first
+    const customRules = [
+      "||alb.reddit.com^",                     // Reddit Ad Load Balancer network requests
+      "reddit.com##shreddit-ad-post",          // Reddit new UI ad post container
+      "reddit.com##shreddit-dynamic-ad-link",  // Reddit new UI dynamic ad link
+      "reddit.com##.promotedlink",             // Reddit old UI promoted links
+      "reddit.com##.ad-container",             // Generic ad container on reddit
+      "/pagead.js$domain=adblock.turtlecute.org", // Test rule for adblock.turtlecute.org
+      "/widget/ads."                           // Generic test rule
+    ].join('\n');
+    totalFilters += adBlocker.load_filter_list(customRules);
+
     for (const text of filterListManager.getAllCachedTexts()) {
       totalFilters += adBlocker.load_filter_list(text);
     }
@@ -364,7 +400,16 @@ function handleRequest(details) {
       }
     }
 
-    // 2. Skip filter check for same-site or related-domain requests.
+    // 2. Block known first-party tracking/ad subdomains immediately.
+    //    These operate on the same base domain but are purely for ads/tracking.
+    //    We must check this BEFORE the same-site bypass logic below.
+    if (FIRST_PARTY_ADS.some(adDomain => requestDomain === adDomain || requestDomain.endsWith('.' + adDomain))) {
+      incrementBlocked();
+      console.log(`[BLOCKED-1P-AD] ${details.type}: ${url}`);
+      return { cancel: true };
+    }
+
+    // 3. Skip filter check for same-site or related-domain requests.
     //    Covers: same base domain (static-assets.cargurus.com ↔ www.cargurus.com)
     //    AND site-specific CDNs (redditstatic.com ↔ reddit.com)
     const requestBase = getBaseDomainCached(requestDomain);
@@ -397,7 +442,13 @@ function handleRequest(details) {
 // ── Handle request headers ───────────────────────────────────────────
 function handleHeaders(details) {
   if (!enabled || !isInitialized) {
-    return { requestHeaders: details.requestHeaders };
+    return {};
+  }
+
+  // Workaround for Chromium bug: modifying WebSocket headers via webRequest API
+  // detaches the request from the document's CSP context, bypassing connect-src enforcement.
+  if (details.type === 'websocket') {
+    return {};
   }
 
   const sourceDomain = getSourceDomain(details);
@@ -436,7 +487,10 @@ function handleHeaders(details) {
     }
   }
 
-  return { requestHeaders: details.requestHeaders };
+  if (modified) {
+    return { requestHeaders: details.requestHeaders };
+  }
+  return {};
 }
 
 // ── URL parameter stripping ──────────────────────────────────────────

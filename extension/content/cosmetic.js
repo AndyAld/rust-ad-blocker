@@ -8,6 +8,34 @@
     let styleElement = null;
     let appliedSelectors = new Set();
 
+    // ── Hardcoded site-specific ad hiding (injected IMMEDIATELY) ─────
+    // These fire at document_start before any async message passing,
+    // guaranteeing ads are hidden even if the Rust engine pipeline is slow.
+    const SITE_RULES = {
+        'reddit.com': [
+            'shreddit-ad-post',
+            'shreddit-dynamic-ad-link',
+            '.promotedlink',
+            '[ad-type]',
+            '[promoted]',
+            'a[href*="alb.reddit.com"]',
+            '.ad-container'
+        ]
+    };
+
+    // Find matching rules for the current domain
+    for (const [siteDomain, selectors] of Object.entries(SITE_RULES)) {
+        if (domain === siteDomain || domain.endsWith('.' + siteDomain)) {
+            // Inject CSS immediately — no waiting for Rust engine
+            const earlyStyle = document.createElement('style');
+            earlyStyle.id = 'rust-adblocker-hardcoded';
+            earlyStyle.textContent = selectors.join(',\n') +
+                ' { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; }';
+            (document.head || document.documentElement).appendChild(earlyStyle);
+            break;
+        }
+    }
+
     // Request cosmetic selectors from the background script
     chrome.runtime.sendMessage(
         { action: 'getCosmeticSelectors', domain: domain },
