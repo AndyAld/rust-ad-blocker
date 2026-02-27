@@ -26,3 +26,6 @@ opt-level = 's'       # Optimize for size (good for WASM download)
 lto = true            # Link-time optimization (cross-crate inlining)
 codegen-units = 1     # Single codegen unit for maximum optimization
 strip = true          # Strip debug symbols
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false      # Disable wasm-opt (cached version doesn't support bulk-memory)
