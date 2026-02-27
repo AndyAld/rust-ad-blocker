@@ -1,0 +1,7 @@
+/Users/andyaldrich/Projects/ChromeExtensions/RustAdBlocker/target/wasm32-unknown-unknown/release/deps/liblru-d790733c4da5eb53.rmeta: /Users/andyaldrich/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lru-0.12.5/src/lib.rs
+
+/Users/andyaldrich/Projects/ChromeExtensions/RustAdBlocker/target/wasm32-unknown-unknown/release/deps/liblru-d790733c4da5eb53.rlib: /Users/andyaldrich/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lru-0.12.5/src/lib.rs
+
+/Users/andyaldrich/Projects/ChromeExtensions/RustAdBlocker/target/wasm32-unknown-unknown/release/deps/lru-d790733c4da5eb53.d: /Users/andyaldrich/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lru-0.12.5/src/lib.rs
+
+/Users/andyaldrich/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lru-0.12.5/src/lib.rs:
